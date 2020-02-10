@@ -8,12 +8,10 @@ import (
 	"github.com/caicloud/nirvana/log"
 )
 
-/*
-	FIXME:
-	The `waits` channels are created throughout the initialization process, so we cannot call HandleSignal
-	until we finish initializing and get all the `waits` channels. But what if the signals it handles arrive
-	before we call HandleSignal?
- */
+// FIXME:
+// The `waits` channels are created throughout the initialization process, so we cannot call HandleSignal
+// until we finish initializing and get all the `waits` channels. But what if the signals it handles arrive
+// before we call HandleSignal?
 
 // HandleSignal can catch system signal and send signal to other goroutine before program exits.
 // If clear is not empty, it will execute it.

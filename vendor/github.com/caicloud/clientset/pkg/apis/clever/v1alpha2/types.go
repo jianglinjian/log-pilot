@@ -456,6 +456,9 @@ type MLNeuronTaskJob struct {
 	// MLNeuron task's job state
 	Status MLNeuronPhase `json:"status"`
 
+	// Human readable message indicating the reason for Failure
+	Message string `json:"message"`
+
 	StartTime *metav1.Time `json:"startTime"`
 	EndTime   *metav1.Time `json:"endTime"`
 }
@@ -558,6 +561,9 @@ type ResourceFlavor struct {
 
 	// Memory, in bytes. (500Gi = 500GiB = 500 * 1024 * 1024 * 1024).
 	Memory string `json:"memory"`
+
+	// such as: requests.extendedresource.caicloud.io/gpu-geforce-gt-1030-2001mib
+	GPUResourceClassName string `json:"gpuResourceClassName"`
 }
 
 // Recommended resource configuration with limit
