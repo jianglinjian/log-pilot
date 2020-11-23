@@ -5,10 +5,8 @@ COMMIT := $(if $(COMMIT),$(COMMIT),"Unknown")
 # This repo's root import path (under GOPATH).
 ROOT := github.com/caicloud/log-pilot
 
-UPSTREAM_REGISTRY := cargo.caicloudprivatetest.com/caicloud
-
 # Container registries. You can use multiple registries for a single project.
-REGISTRIES ?= cargo.caicloudprivatetest.com/release
+REGISTRIES ?= cargo.caicloudprivatetest.com/caicloud
 
 # Project output directory.
 OUTPUT_DIR := ./bin
@@ -23,11 +21,11 @@ CMD_DIR := ./cmd
 VERSION ?= $(COMMIT)
 
 # Target binaries. You can build multiple binaries for a single project.
-TARGETS ?= log-pilot filebeat-keeper
+TARGETS := log-pilot filebeat-keeper
 
 # Docker image name.
-LOG_PILOT_IMAGE := $(REGISTRIES)/log-pilot:$(VERSION)
-FILEBEAT_IMAGE := $(REGISTRIES)/filebeat:$(VERSION)
+LOG_PILOT_IMAGE := cargo.caicloudprivatetest.com/caicloud/log-pilot:$(VERSION)
+FILEBEAT_IMAGE := cargo.caicloudprivatetest.com/caicloud/filebeat:$(VERSION)
 
 .PHONY: default container push
 
@@ -43,7 +41,7 @@ build-linux:
 	      -e GOARCH=amd64                                                              \
 	      -e CGO_ENABLED=0                                                             \
 	      -e GOPATH=/go                                                                \
-	        $(UPSTREAM_REGISTRY)/golang:1.10-alpine3.6                                 \
+	        $${registry}/golang:1.10-alpine3.6                                         \
 	          go build -i -v -o $(OUTPUT_DIR)/$${target}                               \
 	            -ldflags "-s -w -X $(ROOT)/pkg/version.Version=$(VERSION)              \
 	            -X $(ROOT)/pkg/version.Commit=$(COMMIT)                                \
