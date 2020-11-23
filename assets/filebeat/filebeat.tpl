@@ -16,28 +16,13 @@
     {{- range $key, $value := .Tags }}
     {{ $key }}: "{{ $value }}"
     {{- end }}
-  {{ if .Multiline -}}
-  multiline:
-    pattern: {{ .Multiline.Pattern }}
-    negate: {{ .Multiline.Negate }}
-    match: {{ .Multiline.Match }}
-    {{ if .Multiline.FlushPattern -}}
-    flush_pattern: {{ .Multiline.FlushPattern }}
-    {{- end }}
-    {{ if .Multiline.MaxLines -}}
-    max_lines: {{ .Multiline.MaxLines }}
-    {{- end }}
-    {{ if .Multiline.Timeout -}}
-    timeout: {{ .Multiline.Timeout }}
-    {{- end }}
-  {{- end }}
   tail_files: false
   # Harvester closing options
   close_eof: false
   close_inactive: 5m
   close_removed: false
   close_renamed: false
-  ignore_older: {{ if .IgnoreOlder }}{{ .IgnoreOlder }}{{ else }}48h{{ end }}
+  ignore_older: 48h  
   # State options
   clean_removed: true
   clean_inactive: 72h

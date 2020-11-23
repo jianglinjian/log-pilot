@@ -57,12 +57,6 @@ _config:
       - --path.filebeat-home=/opt/filebeat
       - --logLevel=debug
       - -e
-      env: 
-      - name: OUTPUT_CONFIG
-        from: 
-          type: Config
-          name: filebeat-output
-          key: filebeat-output.yml
       resources:
         limits:
           cpu: 100m
