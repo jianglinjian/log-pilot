@@ -40,6 +40,8 @@ var (
 		"requests.cpu",
 		"requests.memory",
 		"requests.nvidia.com/gpu",
+		// Deprecated
+		"alpha.kubernetes.io/nvidia-gpu",
 	}
 )
 
@@ -118,7 +120,6 @@ type ClusterQuota struct {
 }
 
 type ClusterQuotaSpec struct {
-	Hard  v1.ResourceList           `json:"hard"`
 	Ratio map[v1.ResourceName]int64 `json:"ratio"`
 }
 

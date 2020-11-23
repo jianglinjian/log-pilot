@@ -15,12 +15,11 @@ func TestParseLogEnv(t *testing.T) {
 			"foo_bar",
 			"",
 		},
-		// TODO: problematic test, fix later
-		//{
-		//	"sn_log_foo_bar_filter",
-		//	"foo_bar",
-		//	"filter",
-		//},
+		{
+			"sn_log_foo_bar_filter",
+			"foo_bar",
+			"filter",
+		},
 		{
 			"aaaa",
 			"",
