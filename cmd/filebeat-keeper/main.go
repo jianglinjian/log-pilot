@@ -87,8 +87,7 @@ func newFileChecker(path string, notify func()) func() {
 		h, err := hashFile(path)
 		if err != nil {
 			log.Warningln(err)
-			h = ""
-			//return
+			return
 		}
 
 		if curHash != h {
@@ -116,7 +115,8 @@ func watchFileChange(path string, reloadCh chan<- struct{}) {
 
 func run(stopCh <-chan struct{}) error {
 	reloadCh := make(chan struct{}, 1)
-	var cmd *AsyncCmd
+	started := false
+	cmd := newCmd()
 
 	watchFileChange(srcConfigPath, reloadCh)
 
@@ -140,23 +140,15 @@ func run(stopCh <-chan struct{}) error {
 			log.Infoln("Reload")
 			if err := applyChange(); err != nil {
 				log.Errorln("Error apply change:", err)
-				if cmd != nil && !cmd.Exited() {
-					log.Infoln("Filebeat will stoped until configmap being updated")
-					if err := cmd.Stop(); err != nil {
-						return fmt.Errorf("filebeat quit with error: %v", err)
-					}
-					log.Infoln("Filebeat quit")
-					cmd = nil
-				}
 				continue
 			}
 
-			if cmd == nil {
-				cmd = newCmd()
+			if !started {
 				if err := cmd.Start(); err != nil {
 					return fmt.Errorf("error run filebeat: %v", err)
 				}
 				log.Infoln("Filebeat start")
+				started = true
 			} else {
 				if err := cmd.Stop(); err != nil {
 					return fmt.Errorf("filebeat quit with error: %v", err)
@@ -169,9 +161,11 @@ func run(stopCh <-chan struct{}) error {
 				}
 			}
 		case <-check:
-			if cmd != nil && cmd.Exited() {
-				log.Fatalln("Filebeat has unexpectedly exited")
-				os.Exit(1)
+			if started {
+				if cmd != nil && cmd.Exited() {
+					log.Fatalln("Filebeat has unexpectedly exited")
+					os.Exit(1)
+				}
 			}
 		}
 	}
